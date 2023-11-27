@@ -22,17 +22,17 @@ void* perform_work(void* arg) {
         printf("myCount: %d -> %d\n", oldCount, myCount);
         oldCount++; // increment 2nd counter
 
-        // end condition
-        if (oldCount == 10) {
-            printf("PROGRAM END\n");
-            exit(0);
-        }
 
         pthread_mutex_unlock(&myMutex); // Unlock the mutex
         printf("CONSUMER: myMutex unlocked\n");
 
         printf("CONSUMER: signaling myCond1\n");
-        pthread_cond_signal(&myCond1); // Signal that the buffer has space
+        pthread_cond_signal(&myCond1); // Signal 
+        
+        // end condition
+        if (oldCount == 10) {
+            return NULL;
+        }
     }
 }
 
@@ -53,6 +53,12 @@ int main() {
         while (myCount != oldCount) {
             printf("PRODUCER: waiting on myCond1\n");
             pthread_cond_wait(&myCond1, &myMutex);
+        }
+
+        if (oldCount == 10) {
+            printf("PROGRAM END\n");
+            result_code = pthread_join(consumer, NULL); // clean up thread
+            exit(0);
         }
 
         myCount++; // increment counter
