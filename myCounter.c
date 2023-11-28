@@ -55,6 +55,7 @@ int main() {
             pthread_cond_wait(&myCond1, &myMutex);
         }
 
+        // end condition
         if (oldCount == 10) {
             printf("PROGRAM END\n");
             result_code = pthread_join(consumer, NULL); // clean up thread
